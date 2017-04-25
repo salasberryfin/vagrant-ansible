@@ -1,9 +1,28 @@
 ---
-      - hosts: all
-        sudo: true
-        tasks:
-                - name: update apt cache
-                  apt: update_cache=yes
-                - name: install apache
-                  apt: name=apache2 state=present
+- hosts: machine1 
+  sudo: true
+  tasks:
+        - name: update apt cache
+          apt: update_cache=yes
+                
+                
+        - name: install nginx
+          apt: pkg=nginx state=latest update_cache=yes
+
+
+        - name: execute commands to start web server (guet port 80 is host port 8080)
+          service:
+                name: nginx
+                state: started
+
+- hosts: machine2
+  sudo: true
+  tasks:
+        - name: install apache
+          apt: name=apache2 state=present
+
+        - name: check if apache server is running
+          service:
+                name: apache2
+                state: started
 
